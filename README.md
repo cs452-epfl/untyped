@@ -1,15 +1,15 @@
 
-# **Getting familiar with term definitions (debruijn-indexed) in `Term.lean`**
+# **Getting familiar with term definitions (de Bruijn-indexed) in `Term.lean`**
 Open `Term.lean`.
 
-The way we encode lambda calculus in this project is by using De Bruijn indices.
+The way we encode lambda calculus in this project is by using [De Bruijn indices](https://en.wikipedia.org/wiki/De_Bruijn_index).
 De Bruijn indices are a way to represent variables in lambda calculus without using variable names. Instead, variables are represented by their position relative to their binding lambda.
 
 For example, the lambda term `λx. λy. x` can be represented using De Bruijn indices as `λ. λ. 1`. Here, `1` refers to the variable bound by the first lambda (counting from the innermost lambda outward).
 Another example: `λx. λy. y x` becomes `λ. λ. 0 1`. Here, `0` refers to the variable bound by the second lambda, and `1` refers to the variable bound by the first lambda.
 
 
-> _Question 1._ At the end of `Term.lean`, manually write a term representing the Church number `3` represented in this De Bruijn encoding.
+> _~~Question 1~~._ At the end of `Term.lean`, manually write a term representing the Church number `3` represented in this De Bruijn encoding.
 
 # **Define a transformer that turns a `Syntax` into a `Term` in `Syntax.lean`**
 
@@ -22,11 +22,11 @@ Open `Syntax.lean`. Notice the difference between the `Syntax` inductive type wi
         - `s_app` represents an application of one syntax to another.
         - `s_value` represents a term value. 
 
-> _Question 2:_ Implement the `lookupName` function to find variable indices in a context.
+> _~~Question 2~~:_ Implement the `lookupName` function to find variable indices in a context.
 `lookupName` searches for a variable name in a list of strings and returns its index.
 
 
-> _Question 3:_ Implement the `elaborate'` function to convert `Syntax` to `Term` using a context. `elaborate'` converts `Syntax` to `Term` by recursively processing the syntax and maintaining a context of variable names.
+> _~~Question 3~~:_ Implement the `elaborate'` function to convert `Syntax` to `Term` using a context. `elaborate'` converts `Syntax` to `Term` by recursively processing the syntax and maintaining a context of variable names.
 > Example: `elaborate (λ "s" => λ "z" => "z")` should produce the term for the church encoding of zero in De Bruijn representation.
 
 Notice that this file defines the following at the end, this `succ` will be needed in the next section:
@@ -43,11 +43,11 @@ def one : Term :=
 
 Open `Reduce.lean`.
 
-> _Question 4:_ Fill in the definition of `Reduce`.
+> _~~Question 4~~:_ Fill in the definition of `Reduce`.
 
 The definition of `Reduce` should match the rules on the page 55 of the Week 3 slides (https://moodle.epfl.ch/pluginfile.php/3426630/mod_resource/content/3/week03.pdf).
 
-> _Question 5:_ Like we did in Livecoding of week 2, define the reflexive transitive closure `ReduceMany` using the standard library and declare the transitive properties (so we can use `calc`). Prove the context theorems for `ReduceMany`: `reduce_many_abs`, `reduce_many_app1`, `reduce_many_app2` (similarly to the lifting of `context_if` to the reflexive transitive closure we did in the livecoding of week 2.)
+> _~~Question 5~~:_ Like we did in Livecoding of week 2, define the reflexive transitive closure `ReduceMany` using the standard library and declare the transitive properties (so we can use `calc`). Prove the context theorems for `ReduceMany`: `reduce_many_abs`, `reduce_many_app1`, `reduce_many_app2` (similarly to the lifting of `context_if` to the reflexive transitive closure we did in the livecoding of week 2.)
 
 Open `Datatypes.lean`.
 

@@ -22,19 +22,23 @@ notation "{" t "}" => Syntax.s_value t
 
 def lookupName (n : String) : List String -> Option Nat
 -- Define the lookup function
+| [] => none
+| x :: xs => if x == n then some 0 else (lookupName n xs).map Nat.succ -- Use `map` for `Option` type
 
 /-
 Elaborate the `Syntax` to the debruijn-indexed `Term` given a context of variable names.
 -/
+@[simp]
 def elaborate' (ctx : List String) : Syntax -> Term
 | Syntax.s_var n => Term.t_var (lookupName n ctx).get!
 | Syntax.s_lam n t =>
-  sorry
+  Term.t_abs (elaborate' (n :: ctx) t)
 | Syntax.s_app t1 t2 =>
-  sorry
+  Term.t_app (elaborate' ctx t1) (elaborate' ctx t2)
 | Syntax.s_value t =>
-  sorry
+  t
 
+@[simp]
 def elaborate (s : Syntax) : Term :=
   elaborate' [] s
 
@@ -45,6 +49,10 @@ def succ : Term :=
   elaborate (λ "n" => λ "s" => λ "z" => "s"("n"("s")("z")))
 def one : Term :=
   elaborate ({succ}({zero}))
+
+#reduce zero
+#reduce succ
+#reduce one
 
 end Examples
 

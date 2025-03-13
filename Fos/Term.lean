@@ -48,4 +48,18 @@ Notation for substitution.
 -/
 notation:70 t "[" u "]" => Term.subst_zero t u
 
+namespace Example
+
+def incr : Rename := fun n => n + 1
+
+#reduce Rename.lift incr 1
+#reduce Rename.lift (Rename.lift incr) 1
+
+-- λs. λz. s (s (s z))
+def three := Term.t_abs (Term.t_abs (Term.t_app (Term.t_var 1)
+                                                (Term.t_app (Term.t_var 1)
+                                                            (Term.t_app (Term.t_var 1)
+                                                                        (Term.t_var 0)))))
+end Example
+
 end Fos
