@@ -53,9 +53,9 @@ Open `Datatypes.lean`.
 
 > _~~Question 6~~:_ Fill in the definitions for `btrue`, `bfalse`, `or`, and `and`.
 
-> _Question 7:_ State and prove that `not (and btrue bfalse) ~~>* btrue` (`boolean_expr_simple`)
+> _~~Question 7~~:_ State and prove that `not (and btrue bfalse) ~~>* btrue` (`boolean_expr_simple`)
 
-> _Question 8:_ Define `iszero` and state and prove the expected lemma for it: `iszero zero` reduces to `btrue` (`iszero_zero`), `iszero (succ n)` reduces to `bfalse` (`iszero_succ`).
+> _~~Question 8~~:_ Define `iszero` and state and prove the expected lemma for it: `iszero zero` reduces to `btrue` (`iszero_zero`), `iszero (succ n)` reduces to `bfalse` (`iszero_succ`).
 
 > _~~Question 9~~:_ Define `flist_nil`, `flist_cons` in the style of fold-left lists. Define `flist_isnil` and prove the expected theorems about it: `isnil nil` reduces to `btrue` (`flist_isnil_nil`) and `isnil (cons h t)` reduces to `bfalse` (`flist_isnil_cons`).
 

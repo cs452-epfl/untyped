@@ -35,42 +35,42 @@ theorem boolean_expr_simple :
              (Term.t_app (Term.t_app and
                                      btrue)
                          bfalse) ~~>* btrue := by
-  -- This lemma is wrong.
-  --have h0 : ∀ (t : Term), Term.t_app btrue t ~~>* Term.t_abs t := by
-
-  have h1 : ∀ (t : Term), Term.t_app (Term.t_app btrue
-                                                 t)
-                                     bfalse ~~>* t := by
-    intro t
-    simp [btrue]
-
-    apply Relation.ReflTransGen.head
-    apply Reduce.e_appabs
-
-  have h1 : Term.t_app and btrue ~~>* Term.t_abs (Term.t_app (Term.t_app btrue
-                                                                          (Term.t_var 0))
-                                                              bfalse) := by
-    simp [and]
-    apply Relation.ReflTransGen.single
-    apply Reduce.e_appabs
-
-  have h2 : Term.t_app (Term.t_app and
-                                   btrue)
-                       bfalse ~~>* bfalse := by
-    apply Relation.ReflTransGen.trans
-    apply reduce_many_app1 h1
-    simp
-
-    apply Relation.ReflTransGen.head
-    apply Reduce.e_appabs
-    simp [btrue]
-
-    apply Relation.ReflTransGen.head
-    apply Reduce.e_appabs
-    sorry
-
-
-  sorry
+  -- not (and tru fls)
+  simp [not, and]
+  -- (λb. b fls tru) ((λb. λc. b c fls) tru fls)
+  apply Relation.ReflTransGen.head
+  apply Reduce.e_app2
+  apply Reduce.e_app1
+  apply Reduce.e_appabs
+  -- (λb. b fls tru) ((λc. tru c fls) fls)
+  apply Relation.ReflTransGen.head
+  apply Reduce.e_app2
+  apply Reduce.e_appabs
+  -- (λb. b fls tru) (tru fls fls)
+  apply Relation.ReflTransGen.head
+  apply Reduce.e_appabs
+  -- (tru fls fls) fls tru
+  simp [btrue, bfalse]
+  -- ( (λt. λf. t) (λt. λf. f) (λt. λf. f) ) (λt. λf. f) (λt. λf. t)
+  apply Relation.ReflTransGen.head
+  apply Reduce.e_app1
+  apply Reduce.e_app1
+  apply Reduce.e_app1
+  apply Reduce.e_appabs
+  -- ( (λf. (λt. λf. f))  (λt. λf. f) ) (λt. λf. f) (λt. λf. t)
+  apply Relation.ReflTransGen.head
+  apply Reduce.e_app1
+  apply Reduce.e_app1
+  apply Reduce.e_appabs
+  -- (λt. λf. f) (λt. λf. f) (λt. λf. t)
+  apply Relation.ReflTransGen.head
+  apply Reduce.e_app1
+  apply Reduce.e_appabs
+  -- (λf. f) (λt. λf. t)
+  apply Relation.ReflTransGen.head
+  apply Reduce.e_appabs
+  -- λt. λf. t
+  apply Relation.ReflTransGen.refl
 
 -- Arithmetic
 
@@ -96,16 +96,33 @@ theorem iszero_zero : elaborate ({iszero}({zero})) ~~>* btrue := by
   apply Relation.ReflTransGen.refl
 
 theorem iszero_succ : elaborate (λ "n" => {iszero}({succ}("n"))) ~~>* elaborate (λ "n" => {bfalse}) := by
+  -- λn. iszero (succ n)
   simp [iszero, succ]
-  -- λn. ( (λm. m (λx. fls) tru) (λn. λs. λz. s (n s z)) )
+  -- λn. ( (λm. m (λx. fls) tru) ((λn'. λs. λz. s (n' s z)) n) )
+  apply Relation.ReflTransGen.head
+  apply Reduce.e_abs
+  apply Reduce.e_app2
+  apply Reduce.e_appabs
+  -- λn. ( (λm. m (λx. fls) tru) (λs. λz. s (n s z)) )
   apply Relation.ReflTransGen.head
   apply Reduce.e_abs
   apply Reduce.e_appabs
-  -- λn. ( (λn. λs. λz. s (n s z)) (λx. fls) tru)
+  -- λn. ((λs. λz. s (n s z)) (λx. fls) tru)
   apply Relation.ReflTransGen.head
   apply Reduce.e_abs
   apply Reduce.e_app1
   apply Reduce.e_appabs
+  -- λn. ((λz. (λx. fls) (n (λx. fls) z)) tru)
+  apply Relation.ReflTransGen.head
+  apply Reduce.e_abs
+  apply Reduce.e_appabs
+  -- λn. ( (λx. fls) (n (λx. fls) tru) )
+  apply Relation.ReflTransGen.head
+  apply Reduce.e_abs
+  apply Reduce.e_appabs
+  -- λn. fls
+  simp [bfalse]
+  apply Relation.ReflTransGen.refl
 
 -- Fold lists
 
